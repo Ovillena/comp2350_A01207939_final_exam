@@ -1,9 +1,7 @@
 const database = include("/databaseConnection");
 
-const passwordPepper = "SeCretPeppa4MySal+";
-
-function getAllRestaurants(callback) {
-  let sqlQuery = "select restaurant_id, name, description from restaurant;";
+function getAllRecipes(callback) {
+  let sqlQuery = "select recipe_id, name, description from recipe;";
   database.query(sqlQuery, (err, results, fields) => {
     if (err) {
       callback(err, null);
@@ -14,9 +12,9 @@ function getAllRestaurants(callback) {
   });
 }
 
-function addRestaurant(postData, callback) {
+function addRecipe(postData, callback) {
   let sqlInsert =
-    "INSERT INTO restaurant (name, description) VALUES (:name, :description);";
+    "INSERT INTO recipe (name, description) VALUES (:name, :description);";
   let params = {
     name: postData.name,
     description: postData.description,
@@ -33,15 +31,15 @@ function addRestaurant(postData, callback) {
   });
 }
 
-function deleteAllReviews(restaurantId, callback) {
-  let sqlDeleteReview =
-    "delete from review where restaurant_id = :restaurantID";
+function deleteAllIngredients(recipeId, callback) {
+  let sqlDeleteIngredient =
+    "delete from ingredient where recipe_id = :recipeID";
   let Params = {
-    restaurantID: restaurantId,
+    recipeID: recipeId,
   };
 
-  console.log(sqlDeleteReview);
-  database.query(sqlDeleteReview, Params, (err, results, fields) => {
+  console.log(sqlDeleteIngredient);
+  database.query(sqlDeleteIngredient, Params, (err, results, fields) => {
     if (err) {
       callback(err, null);
     } else {
@@ -51,19 +49,18 @@ function deleteAllReviews(restaurantId, callback) {
   });
 }
 
-function deleteOneReview(review, callback) {
-  let sqlDeleteReview =
-    "delete from review where restaurant_id = :restaurantID and details = :details and reviewer_name= :reviewerName and rating = :rating limit 1";
+function deleteOneIngredient(ingredient, callback) {
+  let sqlDeleteIngredient =
+    "delete from ingredient where recipe_id = :recipeID and details = :details and ingredienter_name= :ingredienterName and rating = :rating limit 1";
   let Params = {
-    restaurantID: review.id,
-    details: review.review,
-    reviewerName: review.reviewerName,
-    rating: review.rating,
-    //href="/deleteReview?id=<%= restaurantID %>&review=<%= restaurant[i].details %>&reviewerName=<%= restaurant[i].reviewer_name %>&rating=<%= restaurant[i].rating %>"
+    recipeID: ingredient.id,
+    details: ingredient.ingredient,
+    rating: ingredient.rating,
+    //href="/deleteIngredient?id=<%= recipeID %>&ingredient=<%= recipe[i].details %>&ingredienterName=<%= recipe[i].ingredienter_name %>&rating=<%= recipe[i].rating %>"
   };
 
-  console.log(sqlDeleteReview);
-  database.query(sqlDeleteReview, Params, (err, results, fields) => {
+  console.log(sqlDeleteIngredient);
+  database.query(sqlDeleteIngredient, Params, (err, results, fields) => {
     if (err) {
       callback(err, null);
     } else {
@@ -73,14 +70,13 @@ function deleteOneReview(review, callback) {
   });
 }
 
-function deleteRestaurant(restaurantId, callback) {
-  let sqlDeleteRestaurant =
-    "delete from restaurant where restaurant_id = :restaurantID";
+function deleteRecipe(recipeId, callback) {
+  let sqlDeleteRecipe = "delete from recipe where recipe_id = :recipeID";
   let params = {
-    restaurantID: restaurantId,
+    recipeID: recipeId,
   };
-  console.log(sqlDeleteRestaurant);
-  database.query(sqlDeleteRestaurant, params, (err, results, fields) => {
+  console.log(sqlDeleteRecipe);
+  database.query(sqlDeleteRecipe, params, (err, results, fields) => {
     if (err) {
       callback(err, null);
     } else {
@@ -90,14 +86,14 @@ function deleteRestaurant(restaurantId, callback) {
   });
 }
 
-function showReviews(restaurantId, callback) {
-  let sqlRestaurantReviews =
-    "select rest.restaurant_id, name, review_id, reviewer_name, details, rating from restaurant as rest join review as rev  on rest.restaurant_id = rev.restaurant_id where rest.restaurant_id= :restaurantID;";
+function showIngredients(recipeId, callback) {
+  let sqlRecipeIngredients =
+    "select rest.recipe_id, name, ingredient_id, ingredienter_name, details, rating from recipe as rest join ingredient as rev  on rest.recipe_id = rev.recipe_id where rest.recipe_id= :recipeID;";
   let params = {
-    restaurantID: restaurantId,
+    recipeID: recipeId,
   };
-  console.log(sqlRestaurantReviews);
-  database.query(sqlRestaurantReviews, params, (err, results, fields) => {
+  console.log(sqlRecipeIngredients);
+  database.query(sqlRecipeIngredients, params, (err, results, fields) => {
     if (err) {
       callback(err, null);
     } else {
@@ -107,14 +103,13 @@ function showReviews(restaurantId, callback) {
   });
 }
 
-function addReview(postData, callback) {
+function addIngredient(postData, callback) {
   let sqlInsert =
-    "INSERT INTO review (restaurant_id, reviewer_name, details, rating) VALUES (:restaurantID ,:reviewerName, :details, :rating);";
+    "INSERT INTO ingredient (recipe_id, ingredienter_name, details, rating) VALUES (:recipeID ,:ingredienterName, :details, :rating);";
   let params = {
-    restaurantID: postData.id,
-    reviewerName: postData.name,
-    details: postData.review,
-    rating: parseInt(postData.rating),
+    recipeID: postData.id,
+    ingredienterName: postData.name,
+    details: postData.ingredient,
   };
   console.log(sqlInsert);
   database.query(sqlInsert, params, (err, results, fields) => {
@@ -128,11 +123,11 @@ function addReview(postData, callback) {
 }
 
 module.exports = {
-  getAllRestaurants,
-  addRestaurant,
-  deleteAllReviews,
-  deleteRestaurant,
-  showReviews,
-  addReview,
-  deleteOneReview,
+  getAllRecipes,
+  addRecipe,
+  deleteAllIngredients,
+  deleteRecipe,
+  showIngredients,
+  addIngredient,
+  deleteOneIngredient,
 };

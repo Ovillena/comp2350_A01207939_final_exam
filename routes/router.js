@@ -11,14 +11,14 @@ router.get("/", (req, res) => {
       console.log("Error connecting to mysql");
       console.log(err);
     } else {
-      dbModel.getAllRestaurants((err, result) => {
+      dbModel.getAllRecipes((err, result) => {
         if (err) {
           res.render("error", { message: "Error reading from MySQL" });
           console.log("Error reading from mysql");
           console.log(err);
         } else {
           //success
-          res.render("index", { allRestaurants: result });
+          res.render("index", { allRecipes: result });
 
           //Output the results of the query to the Heroku Logs
           console.log(result);
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/addRestaurant", (req, res) => {
+router.post("/addRecipe", (req, res) => {
   console.log("form submit");
   database.getConnection(function (err, dbConnection) {
     if (err) {
@@ -38,7 +38,7 @@ router.post("/addRestaurant", (req, res) => {
       console.log(err);
     } else {
       console.log(req.body);
-      dbModel.addRestaurant(req.body, (err, result) => {
+      dbModel.addRecipe(req.body, (err, result) => {
         if (err) {
           res.render("error", { message: "Error writing to MySQL" });
           console.log("Error writing to mysql");
@@ -57,8 +57,8 @@ router.post("/addRestaurant", (req, res) => {
   });
 });
 
-router.get("/deleteRestaurant", (req, res) => {
-  console.log("delete restaurant");
+router.get("/deleteRecipe", (req, res) => {
+  console.log("delete recipe");
   database.getConnection(function (err, dbConnection) {
     if (err) {
       res.render("error", { message: "Error connecting to MySQL" });
@@ -67,10 +67,10 @@ router.get("/deleteRestaurant", (req, res) => {
     } else {
       console.log(req.query);
 
-      let restaurantId = req.query.id;
-      if (restaurantId) {
+      let recipeId = req.query.id;
+      if (recipeId) {
         //delete from person_skill where person_id = :person_id;
-        dbModel.deleteAllReviews(restaurantId, (err, result) => {
+        dbModel.deleteAllIngredients(recipeId, (err, result) => {
           if (err) {
             res.render("error", { message: "Error writing to MySQL" });
             console.log("Error writing to mysql");
@@ -78,7 +78,7 @@ router.get("/deleteRestaurant", (req, res) => {
           } else {
             //success
             //delete from person where person_id = :person_id;
-            dbModel.deleteRestaurant(restaurantId, (err, result) => {
+            dbModel.deleteRecipe(recipeId, (err, result) => {
               if (err) {
                 res.render("error", { message: "Error writing to MySQL" });
                 console.log("Error writing to mysql");
@@ -102,8 +102,8 @@ router.get("/deleteRestaurant", (req, res) => {
   });
 });
 
-router.get("/showReviews", (req, res) => {
-  console.log("show restaurant reviews");
+router.get("/showIngredients", (req, res) => {
+  console.log("show recipe ingredients");
   database.getConnection(function (err, dbConnection) {
     if (err) {
       res.render("error", { message: "Error connecting to MySQL" });
@@ -112,13 +112,13 @@ router.get("/showReviews", (req, res) => {
     } else {
       console.log(req.query);
 
-      let restaurantId = req.query.id;
-      if (restaurantId === "undefined") {
+      let recipeId = req.query.id;
+      if (recipeId === "undefined") {
         res.redirect("/");
       }
-      if (restaurantId) {
+      if (recipeId) {
         //delete from person_skill where person_id = :person_id;
-        dbModel.showReviews(restaurantId, (err, result) => {
+        dbModel.showIngredients(recipeId, (err, result) => {
           if (err) {
             res.render("error", { message: "Error writing to MySQL" });
             console.log("Error writing to mysql");
@@ -127,9 +127,9 @@ router.get("/showReviews", (req, res) => {
             //success
             //delete from person where person_id = :person_id;
             //success
-            res.render("review", {
-              restaurant: result,
-              restaurantID: restaurantId,
+            res.render("ingredient", {
+              recipe: result,
+              recipeID: recipeId,
             });
 
             //Output the results of the query to the Heroku Logs
@@ -137,7 +137,7 @@ router.get("/showReviews", (req, res) => {
           }
         });
       } else {
-        res.render("review", { message: "Error on Show Review" });
+        res.render("ingredient", { message: "Error on Show Ingredient" });
       }
 
       dbConnection.release();
@@ -145,7 +145,7 @@ router.get("/showReviews", (req, res) => {
   });
 });
 
-router.post("/addReview", (req, res) => {
+router.post("/addIngredient", (req, res) => {
   console.log("form submit");
   database.getConnection(function (err, dbConnection) {
     if (err) {
@@ -154,14 +154,14 @@ router.post("/addReview", (req, res) => {
       console.log(err);
     } else {
       console.log(req.body);
-      dbModel.addReview(req.body, (err, result) => {
+      dbModel.addIngredient(req.body, (err, result) => {
         if (err) {
           res.render("error", { message: "Error writing to MySQL" });
           console.log("Error writing to mysql");
           console.log(err);
         } else {
           //success
-          const currentPage = `showReviews?id=${req.body.id}`;
+          const currentPage = `showIngredients?id=${req.body.id}`;
           console.log(
             "current page URL-------------------------------" + currentPage
           );
@@ -177,8 +177,8 @@ router.post("/addReview", (req, res) => {
   });
 });
 
-router.get("/deleteReview", (req, res) => {
-  console.log("delete review");
+router.get("/deleteIngredient", (req, res) => {
+  console.log("delete ingredient");
   database.getConnection(function (err, dbConnection) {
     if (err) {
       res.render("error", { message: "Error connecting to MySQL" });
@@ -187,10 +187,10 @@ router.get("/deleteReview", (req, res) => {
     } else {
       console.log(req.query);
 
-      let review = req.query;
-      if (review) {
+      let ingredient = req.query;
+      if (ingredient) {
         //delete from person_skill where person_id = :person_id;
-        dbModel.deleteOneReview(review, (err, result) => {
+        dbModel.deleteOneIngredient(ingredient, (err, result) => {
           if (err) {
             res.render("error", { message: "Error writing to MySQL" });
             console.log("Error writing to mysql");
@@ -198,7 +198,7 @@ router.get("/deleteReview", (req, res) => {
           } else {
             //success
 
-            const currentPage = `showReviews?id=${req.query.id}`;
+            const currentPage = `showIngredients?id=${req.query.id}`;
 
             res.redirect(currentPage);
 
