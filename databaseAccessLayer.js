@@ -51,12 +51,12 @@ function deleteAllIngredients(recipeId, callback) {
 
 function deleteOneIngredient(ingredient, callback) {
   let sqlDeleteIngredient =
-    "delete from ingredient where recipe_id = :recipeID and details = :details and ingredienter_name= :ingredienterName and rating = :rating limit 1";
+    "delete from ingredient where recipe_id = :recipeID and description = :description and ingredienter_name= :ingredienterName and rating = :rating limit 1";
   let Params = {
     recipeID: ingredient.id,
-    details: ingredient.ingredient,
+    description: ingredient.ingredient,
     rating: ingredient.rating,
-    //href="/deleteIngredient?id=<%= recipeID %>&ingredient=<%= recipe[i].details %>&ingredienterName=<%= recipe[i].ingredienter_name %>&rating=<%= recipe[i].rating %>"
+    //href="/deleteIngredient?id=<%= recipeID %>&ingredient=<%= recipe[i].description %>&ingredienterName=<%= recipe[i].ingredienter_name %>&rating=<%= recipe[i].rating %>"
   };
 
   console.log(sqlDeleteIngredient);
@@ -88,7 +88,7 @@ function deleteRecipe(recipeId, callback) {
 
 function showIngredients(recipeId, callback) {
   let sqlRecipeIngredients =
-    "select r.recipe_id, name, ingredient_id, ingredienter_name, details from recipe as r join ingredient as i  on r.recipe_id = i.recipe_id where r.recipe_id= :recipeID;";
+    "select r.recipe_id, name, ingredient_id, ingredienter_name, description from recipe as r join ingredient as i  on r.recipe_id = i.recipe_id where r.recipe_id= :recipeID;";
   let params = {
     recipeID: recipeId,
   };
@@ -105,11 +105,11 @@ function showIngredients(recipeId, callback) {
 
 function addIngredient(postData, callback) {
   let sqlInsert =
-    "INSERT INTO ingredient (recipe_id, ingredienter_name, details, rating) VALUES (:recipeID ,:ingredienterName, :details, :rating);";
+    "INSERT INTO ingredient (recipe_id, ingredienter_name, description, rating) VALUES (:recipeID ,:ingredienterName, :description, :rating);";
   let params = {
     recipeID: postData.id,
     ingredienterName: postData.name,
-    details: postData.ingredient,
+    description: postData.ingredient,
   };
   console.log(sqlInsert);
   database.query(sqlInsert, params, (err, results, fields) => {
