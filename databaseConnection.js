@@ -17,7 +17,7 @@ const dbConfigLocal = {
   host: "localhost",
   user: "root",
   password: process.env.DB_PASS,
-  database: "restaurant_review",
+  database: process.env.DB,
   multipleStatements: false,
   namedPlaceholders: true,
 };
