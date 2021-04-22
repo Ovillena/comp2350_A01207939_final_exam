@@ -88,7 +88,7 @@ function deleteRecipe(recipeId, callback) {
 
 function showIngredients(recipeId, callback) {
   let sqlRecipeIngredients =
-    "select rest.recipe_id, name, ingredient_id, ingredienter_name, details, rating from recipe as rest join ingredient as rev  on rest.recipe_id = rev.recipe_id where rest.recipe_id= :recipeID;";
+    "select rest.recipe_id, name, ingredient_id, ingredienter_name, details from recipe as r join ingredient as i  on r.recipe_id = i.recipe_id where r.recipe_id= :recipeID;";
   let params = {
     recipeID: recipeId,
   };
